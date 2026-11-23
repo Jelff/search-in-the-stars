@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080c16">
+  <title>Órbita — Uma missão entre as estrelas</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<header>
+  <a class="brand" href="/" aria-label="Órbita, início"><span class="brand-mark" aria-hidden="true">◎</span> ÓRBITA <small>COMANDO DE EXPLORAÇÃO</small></a>
+  <div class="header-note"><span class="live-dot"></span> SISTEMAS ONLINE <span class="tag">A* / DIJKSTRA</span></div>
+</header>
+<main>
+  <section class="intro">
+    <div><p class="eyebrow">O PRÓXIMO DESTINO ESTÁ ALÉM DO ÓBVIO</p><h1>Encontre seu caminho<br>entre as estrelas<span>.</span></h1><p>Explore o desconhecido. Deixe a ciência guiar a nave.</p></div>
+    <div class="sector"><span class="sector-icon" aria-hidden="true">✧</span><div>CARTA ESTELAR 001<strong id="dimensions">Conectando…</strong><span>VIA LÁCTEA · VISÃO SUPERIOR</span></div></div>
+  </section>
+  <div class="layout">
+    <aside class="panel controls" aria-label="Controles da missão">
+      <p class="eyebrow">01 / CENTRAL DE COMANDO</p><h2>Prepare sua missão</h2>
+      <label for="scenario">Região do espaço</label>
+      <select id="scenario"><option value="solar">Fronteira solar</option><option value="original">Mapa original do projeto</option></select>
+      <label for="algorithm">Sistema de navegação</label>
+      <select id="algorithm"><option value="ambos">Comparar A* e Dijkstra</option><option value="1">A* · navegação heurística</option><option value="0">Dijkstra · varredura completa</option></select>
+      <label for="target">Coordenadas de destino</label><select id="target"><option value="">Destino acessível mais próximo</option></select>
+      <button id="launch" class="primary" disabled><span aria-hidden="true">↗</span> Iniciar exploração</button>
+      <div class="playback"><button id="pause" disabled>Pausar</button><button id="step" disabled>Um passo →</button></div>
+      <button id="reset" class="quiet">↺ Reiniciar missão</button>
+      <div class="divider"></div>
+      <label for="speed">Ritmo da missão <output id="speedLabel">20 ms / evento</output></label><input id="speed" type="range" min="8" max="140" value="20"><div class="range-labels"><span>Rápido</span><span>Contemplativo</span></div>
+      <div class="divider"></div>
+      <div class="environment"><span>Ambiente vivo</span><label class="switch" for="ambient"><input type="checkbox" id="ambient" checked><span class="switch-track"></span><span class="sr-only">Animar o ambiente</span></label></div>
+      <p class="muted">Estrelas, detritos e discos de acreção em movimento.</p>
+      <button id="load" class="quiet upload">+ Importar mapa .dat</button><input id="file" type="file" accept=".dat,.txt" hidden><p id="filename" class="muted">Carta da fronteira solar</p>
+      <div class="brief"><span aria-hidden="true">⌁</span><p><strong>O espaço tem suas regras</strong>Asteroides e buracos negros bloqueiam setores. Cada salto ortogonal custa 1. Encontre uma rota segura.</p></div>
+    </aside>
+    <section class="workspace" aria-label="Carta estelar e telemetria">
+      <div class="map-toolbar"><div class="tabs" role="group" aria-label="Visualizar algoritmo"><button id="tab0" class="selected" aria-pressed="true">Dijkstra</button><button id="tab1" aria-pressed="false">A estrela <span>A*</span></button></div><label class="grid-toggle"><input type="checkbox" id="grid"> Grade de setores</label></div>
+      <div class="map-stage">
+        <div class="map-caption"><span><i class="live-dot"></i> <span id="regionName">FRONTEIRA SOLAR</span></span><span id="mapMode">DIJKSTRA · g</span></div>
+        <canvas id="space" width="1100" height="760" tabindex="0" aria-label="Carta estelar interativa vista de cima. Arraste para mover, use + e − para zoom e 0 para centralizar. Escolha um planeta no mapa ou no controle de destino.">Use os controles de destino e execução para explorar as rotas calculadas em Java.</canvas>
+        <div id="tooltip" class="map-tooltip" hidden></div>
+        <div class="flight-hud"><span class="hud-kicker">EXPLORADORA NCC–01</span><strong id="flightPhase">Em órbita de espera</strong><span id="flightDetail">Propulsão em espera · scanner disponível</span></div>
+        <div class="map-actions" role="group" aria-label="Câmera do mapa"><button id="zoomIn" aria-label="Aproximar mapa">+</button><button id="zoomOut" aria-label="Afastar mapa">−</button><button id="fit" aria-label="Centralizar mapa" title="Centralizar (0)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="6"/><path d="M12 2v6m0 8v6M2 12h6m8 0h6"/></svg></button></div>
+        <div class="map-footer"><span id="coordinates">ARRASTE PARA EXPLORAR · CLIQUE EM UM PLANETA</span><span id="zoomLabel">100%</span></div>
+      </div>
+      <div class="legend"><span><i class="ship-key"></i>Nave</span><span><i class="planet-key"></i>Planeta</span><span><i class="rock-key"></i>Asteroides</span><span><i class="hole-key"></i>Buraco negro</span><span><i class="frontier-key"></i>Fronteira</span><span><i class="visited-key"></i>Explorado</span><span><i class="route-key"></i>Rota segura</span></div>
+      <div class="mission-status"><span class="status-light" aria-hidden="true"></span><p id="status" role="status" aria-live="polite">Conectando à central de navegação…</p></div>
+      <div class="results">
+        <article class="panel result" id="result0"><div class="result-head"><h2><i></i>Dijkstra</h2><span>PRIORIDADE g</span></div><p class="result-state">Aguardando missão</p><div class="progress-track"><div class="progress-fill"></div></div><dl><div><dt>Custo da rota</dt><dd>—</dd></div><div><dt>Processadas</dt><dd>—</dd></div><div><dt>Descobertas</dt><dd>—</dd></div><div><dt>Tempo Java</dt><dd>—</dd></div></dl></article>
+        <article class="panel result" id="result1"><div class="result-head"><h2><i></i>A estrela</h2><span>PRIORIDADE g + h</span></div><p class="result-state">Aguardando missão</p><div class="progress-track"><div class="progress-fill"></div></div><dl><div><dt>Custo da rota</dt><dd>—</dd></div><div><dt>Processadas</dt><dd>—</dd></div><div><dt>Descobertas</dt><dd>—</dd></div><div><dt>Tempo Java</dt><dd>—</dd></div></dl></article>
+      </div>
+      <p class="footnote">Carta artística, sem escala astronômica. Buscas executadas em Java; o tempo de animação não mede o desempenho dos algoritmos.</p>
+    </section>
+  </div>
+</main>
+<footer><span>ÓRBITA <span class="footer-sep">/</span> LABORATÓRIO DE NAVEGAÇÃO</span><span>Uma pequena nave. Um universo de caminhos.</span></footer>
+</body>
+</html>

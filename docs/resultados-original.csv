@@ -1,0 +1,3 @@
+algoritmo;encontrou;linha_destino;coluna_destino;custo;celulas_caminho;processadas;descobertas;tempo_ns;mediana_sem_eventos_ns
+Dijkstra;true;5;9;13;14;30;32;4805077;60769
+A*;true;5;9;13;14;28;30;278620;48231
